@@ -1,32 +1,37 @@
-// STUB — will be replaced during merge
+import { usePersistedState } from './usePersistedState';
 
-export interface CounterState {
+interface CounterState {
   label: string;
   value: number;
   decrementAmount: number;
 }
 
-export interface UseCounterReturn extends CounterState {
-  setLabel: (label: string) => void;
-  setValue: (value: number) => void;
-  setDecrementAmount: (amount: number) => void;
-  decrement: () => void;
-  increment: () => void;
-  reset: () => void;
-}
-
-export function useCounter(storageKey: string, defaultLabel: string): UseCounterReturn {
-  void storageKey;
-  void defaultLabel;
-  return {
+export function useCounter(storageKey: string, defaultLabel: string) {
+  const defaultState: CounterState = {
     label: defaultLabel,
     value: 0,
     decrementAmount: 1,
-    setLabel: () => {},
-    setValue: () => {},
-    setDecrementAmount: () => {},
-    decrement: () => {},
-    increment: () => {},
-    reset: () => {},
+  };
+
+  const [state, setState] = usePersistedState<CounterState>(storageKey, defaultState);
+
+  const setLabel = (label: string) => setState({ ...state, label });
+  const setValue = (value: number) => setState({ ...state, value });
+  const setDecrementAmount = (decrementAmount: number) => setState({ ...state, decrementAmount });
+
+  const increment = () => setState({ ...state, value: state.value + 1 });
+  const decrement = () => setState({ ...state, value: Math.max(0, state.value - state.decrementAmount) });
+  const reset = () => setState({ label: defaultLabel, value: 0, decrementAmount: 1 });
+
+  return {
+    label: state.label,
+    value: state.value,
+    decrementAmount: state.decrementAmount,
+    setLabel,
+    setValue,
+    setDecrementAmount,
+    decrement,
+    increment,
+    reset,
   };
 }

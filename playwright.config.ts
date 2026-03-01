@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: 'tests/e2e',
+  testDir: 'tests',
+  testIgnore: ['**/unit/**'],
   use: {
     viewport: { width: 375, height: 812 },
   },

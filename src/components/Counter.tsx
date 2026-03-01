@@ -19,6 +19,7 @@ export function Counter({
   value,
   decrementAmount,
   setLabel,
+  setValue,
   setDecrementAmount,
   increment,
   decrement,
@@ -26,6 +27,8 @@ export function Counter({
 }: CounterProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const n = counterNumber;
+
+  const decrementLabel = decrementAmount === 0 ? '0' : `-${decrementAmount}`;
 
   return (
     <div className="counter">
@@ -52,7 +55,7 @@ export function Counter({
           data-testid={`decrement-btn-${n}`}
           onClick={decrement}
         >
-          -{decrementAmount}
+          {decrementLabel}
         </button>
         <button
           className="btn btn-reset"
@@ -81,6 +84,19 @@ export function Counter({
               data-testid={`label-input-${n}`}
               value={label}
               onChange={(e) => setLabel(e.target.value)}
+            />
+          </label>
+          <label className="settings-row">
+            <span>Value</span>
+            <input
+              type="number"
+              className="settings-input"
+              data-testid={`value-input-${n}`}
+              value={value}
+              onChange={(e) => {
+                const parsed = parseInt(e.target.value, 10);
+                if (!isNaN(parsed) && parsed >= 0) setValue(parsed);
+              }}
             />
           </label>
           <label className="settings-row">

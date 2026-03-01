@@ -5,7 +5,10 @@ export function usePersistedState<T>(key: string, defaultValue: T): [T, (val: T)
     try {
       const item = localStorage.getItem(key);
       if (item === null) return defaultValue;
-      return JSON.parse(item) as T;
+      const parsed = JSON.parse(item) as T;
+      // Guard against corrupted or type-mismatched data written by other scripts
+      if (typeof parsed !== typeof defaultValue) return defaultValue;
+      return parsed;
     } catch {
       return defaultValue;
     }

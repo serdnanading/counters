@@ -5,7 +5,8 @@ export function useCounter(storageKey: string, defaultLabel: string) {
   const [value, setValue] = usePersistedState<number>(`${storageKey}-value`, 0);
   const [decrementAmount, setDecrementAmount] = usePersistedState<number>(`${storageKey}-decrementAmount`, 1);
 
-  const increment = () => setValue(value + 1);
+  const MAX_VALUE = 1_000_000;
+  const increment = () => setValue(Math.min(MAX_VALUE, value + 1));
   const decrement = () => setValue(Math.max(0, value - decrementAmount));
   const reset = () => {
     setLabel(defaultLabel);
